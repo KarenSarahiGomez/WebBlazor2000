@@ -14,7 +14,7 @@ namespace Blazor.Controllers
         private ILoginRepositorio _loginRepositorio;
         private IUsuarioRepositorio _usuarioRepositorio;
 
-        LoginController(Config config)
+        public LoginController(Config config)
         {
             _config = config;
             _loginRepositorio = new LoginRepositorio(config.CadenaConexion);

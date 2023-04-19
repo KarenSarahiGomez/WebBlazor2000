@@ -71,7 +71,7 @@ namespace Datos.Repositorios
             return lista;
         }
 
-        public async Task<Usuario> GetPorCodigoAsync(string codigo)
+        public async Task<Usuario> GetPorCodigoAsync(string codigoUsuario)
         {
             Usuario user = new Usuario();
             try
@@ -79,7 +79,7 @@ namespace Datos.Repositorios
                 using MySqlConnection _conexion = Conexion();
                 await _conexion.OpenAsync();
                 string sql = "SELECT * FROM usuario WHERE CodigoUsuario = @CodigoUsuario;";
-                user = await _conexion.QueryFirstAsync<Usuario>(sql, new { codigo });
+                user = await _conexion.QueryFirstAsync<Usuario>(sql, new { codigoUsuario });
             }
             catch (Exception)
             {
