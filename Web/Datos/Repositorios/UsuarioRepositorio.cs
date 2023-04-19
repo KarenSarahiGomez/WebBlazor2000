@@ -39,7 +39,7 @@ namespace Datos.Repositorios
             return resultado;
         }
 
-        public async Task<bool> EliminarAsync(string codigo)
+        public async Task<bool> EliminarAsync(string codigoUsuario)
         {
             bool resultado = false;
             try
@@ -47,7 +47,7 @@ namespace Datos.Repositorios
                 using MySqlConnection _conexion = Conexion();
                 await _conexion.OpenAsync();
                 string sql = "DELETE FROM usuario WHERE CodigoUsuario = @CodigoUsuario;";
-                resultado = Convert.ToBoolean(await _conexion.ExecuteAsync(sql, new { codigo }));
+                resultado = Convert.ToBoolean(await _conexion.ExecuteAsync(sql, new { codigoUsuario }));
             }
             catch (Exception)
             {
