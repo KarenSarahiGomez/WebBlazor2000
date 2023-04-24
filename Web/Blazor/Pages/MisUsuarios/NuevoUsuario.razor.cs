@@ -6,7 +6,7 @@ using Modelos;
 
 namespace Blazor.Pages.MisUsuarios
 {
-    public partial class EditarUsuario
+    public partial class NuevoUsuario
     {
         [Inject] private IUsuarioServicio usuarioServicio { get; set; }
         [Inject] private NavigationManager navigationManager { get; set; }
@@ -15,15 +15,7 @@ namespace Blazor.Pages.MisUsuarios
         private Usuario user = new Usuario();
         [Parameter] public string CodigoUsuario { get; set; }
 
-        string imgUrl = string.Empty; //valor vacio inicialmente
-
-        protected override async Task OnInitializedAsync()
-        {
-            if (!string.IsNullOrEmpty(CodigoUsuario))
-            {
-                user = await usuarioServicio.GetPorCodigoAsync(CodigoUsuario);
-            }
-        }
+        string imgUrl = string.Empty;
 
         private async Task SeleccionarImagen(InputFileChangeEventArgs e)
         {
@@ -43,14 +35,16 @@ namespace Blazor.Pages.MisUsuarios
                 return;
             }
 
-            bool edito = await usuarioServicio.ActualizarAsync(user);
-            if (edito)
+            user.FechaCreación = DateTime.Now;
+
+            bool inserto = await usuarioServicio.NuevoAsync(user);
+            if (inserto)
             {
-                await Swal.FireAsync("Felicidades", "Usuario Actualizado", SweetAlertIcon.Success);
+                await Swal.FireAsync("Felicidades", "Usuario Guardado", SweetAlertIcon.Success);
             }
             else
             {
-                await Swal.FireAsync("Error", "No se pudo actualizar el usuario", SweetAlertIcon.Error);
+                await Swal.FireAsync("Error", "No se pudo guardar el usuario", SweetAlertIcon.Error);
             }
         }
 
@@ -58,39 +52,5 @@ namespace Blazor.Pages.MisUsuarios
         {
             navigationManager.NavigateTo("/Usuarios");
         }
-
-        protected async void Eliminar()
-        {
-            SweetAlertResult result = await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "¿Seguro que desea eliminar el usuario?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true,
-                ConfirmButtonText = "Aceptar",
-                CancelButtonText = "Cancelar"
-            });
-
-            if (!string.IsNullOrEmpty(result.Value))
-            {
-                bool elimino = await usuarioServicio.EliminarAsync(user.CodigoUsuario);
-
-                if (elimino)
-                {
-                    await Swal.FireAsync("Felicidades", "Usuario eliminado", SweetAlertIcon.Success);
-                    navigationManager.NavigateTo("/Usuarios");
-                }
-                else
-                {
-                    await Swal.FireAsync("Error", "No se pudo eliminar el usuario", SweetAlertIcon.Error);
-                }
-            }
-        }
     }
-}
-
-enum Roles
-{
-    Seleccionar,
-    Administrador,
-    Usuario
 }
